@@ -1,7 +1,3 @@
-const ascending = 1
-const descening = -1
-
-let sortDirection = ascending
 let foods = [
     {
         "id": "coles-muslie-almond",
@@ -797,54 +793,48 @@ let foods = [
         "tags": ["snack", "carb"]
     }
 ]
+// searchbar variables
+let sortAscendingOrder = true
+let lastSortedColumn = "forename"
+let searchValue = ""
 
-function switchSortDirection(){
-    sortDirection = sortDirection * -1
-    sortFoodName(sortDirection)
-}
+// variable that goes through each key in the first element of the 'foods' array, ie. id, name, tags, etc.
+let foodKeys = Object.keys(foods[0])
 
-function sortFoodName(sortDirection){
-    let sortedFoodNames = foods.sort((a,b) => a.name < b.name )
-}
+// function that displays the main JSON data onto a table
+function displayMainTable() {
+    let htmlString = `<table><tr>`
 
-function displayTable() {
-    let htmlString = `<table>
-                     <tr>
-                        <th>Name</th>
-                        <th>Id</th>
-                        <th>Tag</th>
-                        <th>Energy</th>
-                        <th>Protein</th>
-                        <th>Fat</th>
-                        <th>Saturated Fat</th>
-                        <th>Carbohydrate</th>
-                        <th>Sugars</th>
-                        <th>Fibre</th>
-                        <th>Sodium</th>
-                    </tr>`
+        foodKeys.forEach(foodKey => htmlString += `<th>${foodKey}</th>`)
 
-    for (i = 0; i < foods.length; i++) {
-        const food = foods[i]
-        const nutrition = food['nutrition-per-100g'] || {}
-
-        htmlString += `<tr>
-                    <td>${food.name}</td>
-                    <td>${food.id}</td>
-                    <td>${food.tags ? food.tags : ''}</td>
-                    <td>${nutrition.energy || ''}</td>
-                    <td>${nutrition.protein || ''}</td>
-                    <td>${nutrition.fat || ''}</td>
-                    <td>${nutrition['saturated-fat'] || ''}</td>
-                    <td>${nutrition.carbohydrate || ''}</td>
-                    <td>${nutrition.sugars || ''}</td>
-                    <td>${nutrition['dietary-fibre'] || ''}</td>
-                    <td>${nutrition.sodium || ''}</td>
-                   </tr>`
-    }
+    htmlString += `</tr>`
+    
+    foods.forEach(food => {
+    htmlString += `<tr>`
+        foodKeys.forEach(foodKey => htmlString += `<td>${food[foodKey]}</td>`)
+    htmlString += `</tr>`
+    })
 
     htmlString += `</table>`
 
-    document.getElementById("content").innerHTML = htmlString
+    document.getElementById("mainTable").innerHTML = htmlString
+}
+function search(stringValue) {
+    searchValue = stringValue
+    displayMainTable()
 }
 
+// food tag checkbox variables
+// https://www.w3schools.com/jsref/jsref_from.asp for Array.from()
+let foodTags = foods.map(food => food.tags)
+let uniqueTags = [...new Set(foodTags)]
 
+// function that displays the checkboxes for the food tags
+function displayTagCheckboxes() {
+    let tagCheckboxes = uniqueTags
+
+    let htmlString = ""
+    tagCheckboxes.forEach(tagCheckbox => htmlString += `<label>${tagCheckbox}</label> <input type="checkbox" id="${tagCheckbox}" onclick="displayMainTable()"></input>`)
+
+    document.getElementById("tagCheckboxes").innerHTML = htmlString
+}
