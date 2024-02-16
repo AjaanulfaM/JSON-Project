@@ -793,32 +793,94 @@ let foods = [
         "tags": ["snack", "carb"]
     }
 ]
-// searchbar variables
-let sortAscendingOrder = true
-let lastSortedColumn = "forename"
-let searchValue = ""
 
-// variable that goes through each key in the first element of the 'foods' array, ie. id, name, tags, etc.
+// sorting variables
+let sortAscendingOrder = true
+let lastSortedColumn = "id"
+
+
+function sortOrder(foodKey) {
+    if (lastSortedColumn === foodKey) {
+        sortAscendingOrder = !sortAscendingOrder
+    }
+    else {
+        lastSortedColumn = foodKey
+        sortAscendingOrder = true
+    }
+
+    if (sortAscendingOrder) {
+        foods.sort((a, b) => a[foodKey] < b[foodKey] ? -1 : 1)
+    }
+    else {
+        foods.sort((a, b) => a[foodKey] < b[foodKey] ? 1 : -1)
+    }
+    displayMainTable()
+}
+
+// mainTable variables
 let foodKeys = Object.keys(foods[0])
+let foodCount = 0
 
 // function that displays the main JSON data onto a table
 function displayMainTable() {
+    let aToZSymbol = sortAscendingOrder === true ? " a-z" : " z-a"
+
     let htmlString = `<table><tr>`
 
-        foodKeys.forEach(foodKey => htmlString += `<th>${foodKey}</th>`)
+    foodKeys.forEach(foodKey => {
+        if (foodKey !== "nutrition-per-100g" && foodKey !== "nutrition-per-100ml") {
+            htmlString += `<th onclick=sortOrder("${foodKey}")>${foodKey}${lastSortedColumn === foodKey ? aToZSymbol : ""}</th>`
+        }
+    })
 
     htmlString += `</tr>`
-    
+
     foods.forEach(food => {
-    htmlString += `<tr>`
-        foodKeys.forEach(foodKey => htmlString += `<td>${food[foodKey]}</td>`)
-    htmlString += `</tr>`
+        foodCount++
+
+        htmlString += `<tr>`
+        foodKeys.forEach(foodKey => {
+            if (foodKey !== "nutrition-per-100g" && foodKey !== "nutrition-per-100ml") {
+                htmlString += `<td onclick="displayRow(${foodCount - 1})">${food[foodKey]}</td>`
+            }
+        })
+        htmlString += `</tr>`
     })
 
     htmlString += `</table>`
 
     document.getElementById("mainTable").innerHTML = htmlString
 }
+
+// function that will display the row that the user clicks with the help of the foodCount++ variable
+function displayRow(foodPosition) {
+    let htmlString = `<table><tr>`
+
+    foodKeys.forEach(foodKey => htmlString += `<th>${foodKey}</th>`)
+    htmlString += `</tr>`
+
+    htmlString += `<tr>`
+    foodKeys.forEach(foodKey => htmlString += `<td>${foods[foodPosition][foodKey]}</td>`)
+    htmlString += `</tr>`
+
+    htmlString += `</table>`
+
+    htmlString += `<div id="reloadTableButton">
+                    <button onclick="reloadTable()">Reset</button>
+                   </div>`
+
+    document.getElementById("mainTable").innerHTML = htmlString
+}
+
+// function that reloads the actual web page in order to load the main table again (temporary)
+// https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript#:~:text=To%20reload%20a%20page%20using%20JavaScript%2C%20use%3A%20window.&text=If%20you%20put-,window.,reload(true)%3B
+function reloadTable() {
+    location.reload()
+}
+
+// searchbar variables
+let searchValue = ""
+
 function search(stringValue) {
     searchValue = stringValue
     displayMainTable()
@@ -826,15 +888,15 @@ function search(stringValue) {
 
 // food tag checkbox variables
 // https://www.w3schools.com/jsref/jsref_from.asp for Array.from()
-let foodTags = foods.map(food => food.tags)
-let uniqueTags = [...new Set(foodTags)]
+// let foodTags = foods.map(food => food.tags)
+// let uniqueTags = [...new Set(foodTags)]
 
 // function that displays the checkboxes for the food tags
-function displayTagCheckboxes() {
-    let tagCheckboxes = uniqueTags
+// function displayTagCheckboxes() {
+//     let tagCheckboxes = uniqueTags
 
-    let htmlString = ""
-    tagCheckboxes.forEach(tagCheckbox => htmlString += `<label>${tagCheckbox}</label> <input type="checkbox" id="${tagCheckbox}" onclick="displayMainTable()"></input>`)
+//     let htmlString = ""
+//     tagCheckboxes.forEach(tagCheckbox => htmlString += `<label>${tagCheckbox}</label> <input type="checkbox" id="${tagCheckbox}" onclick="displayMainTable()"></input>`)
 
-    document.getElementById("tagCheckboxes").innerHTML = htmlString
-}
+//     document.getElementById("tagCheckboxes").innerHTML = htmlString
+// }
