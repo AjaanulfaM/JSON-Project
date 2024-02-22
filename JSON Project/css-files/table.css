@@ -1,26 +1,29 @@
-td {
-    padding: 5px;
+table {
+    border-collapse: collapse;
+    border: 1px solid black;
 }
 
-#content {
+#mainTable {
     display: flex;
     justify-content: center;
 }
 
-table {
-    border-collapse: collapse;
-    border: 1px solid black;
-    width: 100%;
+.header {
+    text-align: center;
+    margin: 5px;
 }
 
 th {
+    padding: 3px;
     text-align: left;
-    padding: 5px;
     background-color: lightgray;
     border-left: 1px solid black;
     border-bottom: 1px solid black;
     text-transform: capitalize;
+}
 
+td {
+    padding: 3px;
 }
 
 th:hover {
@@ -28,6 +31,31 @@ th:hover {
     text-decoration: underline;
 }
 
+td:hover {
+    font-size: 16.5px;
+    color: rgb(34, 34, 34);
+}
+
 tr:nth-child(odd) {
     background-color: rgb(240, 240, 240);
+}
+
+#reloadTableButton {
+    margin: 15px;
+}
+
+button {
+    box-shadow: black 1px 1px 1px;
+    border-radius: 5px;
+    background-color: lightgray;
+}
+
+button:hover {
+    transform: scale(0.9);
+    cursor: pointer;
+}
+
+#addFoodOption {
+    display: flex;
+    justify-content: center;
 }
