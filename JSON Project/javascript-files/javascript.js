@@ -125,4 +125,5 @@ function addFoodData() {
     foods.push(newFood)
 
     displayMainTable()
+    //fwbiequebh
 }
